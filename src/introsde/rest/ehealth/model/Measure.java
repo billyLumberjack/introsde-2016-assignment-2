@@ -112,6 +112,16 @@ public class Measure implements Serializable {
 	public void setPersonId(int personId) {
 		this.personId = personId;
 	}
+	
+    public static Measure saveMeasure(Measure m) {
+        EntityManager em = MyDao.instance.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(m);
+        tx.commit();
+        MyDao.instance.closeConnections(em);
+        return m;
+    } 	
 
     public static List<Measure> getAll() {
         EntityManager em = MyDao.instance.createEntityManager();

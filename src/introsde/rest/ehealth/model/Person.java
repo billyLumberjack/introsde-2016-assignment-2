@@ -1,6 +1,7 @@
 package introsde.rest.ehealth.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -50,8 +51,8 @@ public class Person implements Serializable {
 	
 	
 	// mappedBy must be equal to the name of the attribute in LifeStatus that maps this relation
-	@OneToMany(mappedBy="person")
-	@XmlElementWrapper(name="measures")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="person")
+	@XmlElementWrapper(name="measure")
 	@JsonIgnore
 	private List<Measure> measure;
 	
@@ -103,6 +104,34 @@ public class Person implements Serializable {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
+	
+	public Person cleanMeasures(){
+	     Person p=new Person();
+	     p.setBirthdate(this.birthdate);
+	     p.setId(this.id);
+	     p.setName(this.name);
+	     p.setSurname(this.surname);
+	     
+	     
+	     //now I iterate and I report only the more recent for each type
+	     List<String>  matchString = new ArrayList<String>();
+	     p.measure = new ArrayList<Measure>();
+	     p.measure.clear();
+	     
+	     for(int i=0; i< this.measure.size();i++){
+	    	 if(!matchString.contains(this.measure.get(i).getType())){
+	    		 matchString.add(this.measure.get(i).getType());
+	    		 p.measure.add(this.measure.get(i));
+	    		 }
+	    	 else
+	    	 {
+	    		 if(this.measure.get(i).getDate()>p.measure.get(matchString.indexOf(this.measure.get(i).getType())).getDate())
+	    			 p.measure.set(matchString.indexOf(this.measure.get(i).getType()), this.measure.get(i));
+	    		 }
+	    	 }
+	     return p;
+	     }
+	
 
     public static List<Person> getAll() {
         EntityManager em = MyDao.instance.createEntityManager();
@@ -116,5 +145,47 @@ public class Person implements Serializable {
         Person p = em.find(Person.class, id);
         MyDao.instance.closeConnections(em);
         return p;
+    }
+    
+    
+    public static Person updatePerson(Person p) {
+        EntityManager em = MyDao.instance.createEntityManager(); 
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        p=em.merge(p);
+        tx.commit();
+        MyDao.instance.closeConnections(em);
+        return p;
+    }    
+    
+
+
+    public static Person savePerson(Person p) {
+        EntityManager em = MyDao.instance.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(p);
+        
+        for(Measure m : p.getMeasure()){
+        	m.setPersonId(p.getId());
+        	em.merge(m);
+        }
+        p = em.merge(p);
+        
+        
+        
+        tx.commit();
+        MyDao.instance.closeConnections(em);
+        return p;
+    } 
+    
+    public static void removePerson(Person p) {
+        EntityManager em = MyDao.instance.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        p=em.merge(p);
+        em.remove(p);
+        tx.commit();
+        MyDao.instance.closeConnections(em);
     }
 }
