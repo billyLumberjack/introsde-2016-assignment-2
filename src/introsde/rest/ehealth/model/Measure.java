@@ -65,7 +65,11 @@ public class Measure implements Serializable {
 		this.person = person;
 	}
 	
-	
+	public Measure(String t, Double v, int d) {
+		this.type = t;
+		this.value = v;
+		this.date = d;
+	}	
 	 
 
 	public Measure() {
@@ -122,10 +126,20 @@ public class Measure implements Serializable {
         MyDao.instance.closeConnections(em);
         return m;
     } 	
+    
+    public static Measure updateMeasure(Measure m) {
+        EntityManager em = MyDao.instance.createEntityManager(); 
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        m=em.merge(m);
+        tx.commit();
+        MyDao.instance.closeConnections(em);
+        return m;
+    }    
 
     public static List<Measure> getAll() {
         EntityManager em = MyDao.instance.createEntityManager();
-        List<Measure> list = (List<Measure>) em.createQuery("SELECT m FROM Measure m").getResultList();
+        List<Measure> list = em.createQuery("SELECT m FROM Measure m", Measure.class).getResultList();
         MyDao.instance.closeConnections(em);
         return list;
     }
@@ -138,5 +152,18 @@ public class Measure implements Serializable {
     	MyDao.instance.closeConnections(em);
     	return m;
 	}
+	
+	public static List<Measure> getByDate(int id, String type,int a, int b) {
+    	EntityManager em = MyDao.instance.createEntityManager();
+    	List<Measure> mm =em.createQuery(
+    	        "SELECT m FROM Measure m WHERE m.personId LIKE :identifier AND m.type LIKE :type AND m.date BETWEEN :init AND :end",Measure.class)
+    	        .setParameter("init",a)
+    	        .setParameter("end",b)
+    	        .setParameter("identifier",id)
+    	        .setParameter("type",type)
+    	        .getResultList();
+    	MyDao.instance.closeConnections(em);
+    	return mm;
+	}	
 
 }

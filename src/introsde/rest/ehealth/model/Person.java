@@ -105,31 +105,34 @@ public class Person implements Serializable {
 		this.surname = surname;
 	}
 	
-	public Person cleanMeasures(){
+	public void cleanMeasures(){
+		/*
 	     Person p=new Person();
 	     p.setBirthdate(this.birthdate);
 	     p.setId(this.id);
 	     p.setName(this.name);
 	     p.setSurname(this.surname);
-	     
+	     */
 	     
 	     //now I iterate and I report only the more recent for each type
 	     List<String>  matchString = new ArrayList<String>();
-	     p.measure = new ArrayList<Measure>();
-	     p.measure.clear();
+	     List<Measure> newMeasure = new ArrayList<Measure>();
+	     newMeasure.clear();
 	     
 	     for(int i=0; i< this.measure.size();i++){
 	    	 if(!matchString.contains(this.measure.get(i).getType())){
 	    		 matchString.add(this.measure.get(i).getType());
-	    		 p.measure.add(this.measure.get(i));
+	    		 newMeasure.add(this.measure.get(i));
 	    		 }
 	    	 else
 	    	 {
-	    		 if(this.measure.get(i).getDate()>p.measure.get(matchString.indexOf(this.measure.get(i).getType())).getDate())
-	    			 p.measure.set(matchString.indexOf(this.measure.get(i).getType()), this.measure.get(i));
+	    		 if(this.measure.get(i).getDate()>newMeasure.get(matchString.indexOf(this.measure.get(i).getType())).getDate())
+	    			 newMeasure.set(matchString.indexOf(this.measure.get(i).getType()), this.measure.get(i));
 	    		 }
-	    	 }
-	     return p;
+	    	}
+	     
+	     this.measure = newMeasure;
+	     
 	     }
 	
 
@@ -188,4 +191,69 @@ public class Person implements Serializable {
         tx.commit();
         MyDao.instance.closeConnections(em);
     }
+    //select b.fname, b.lname from Users b JOIN b.groups c where c.groupName = :groupName 
+    public static List<Person> getByRangeMeasure(int min,int max,String t){
+    	EntityManager em = MyDao.instance.createEntityManager();
+    	
+    	String queryStr = "select * from Person where Id in ("
+    			+ "select PersonId from ("
+    			+ "select PersonId,Date,Value from Measure where Type like ?"
+    			+ ") group by PersonId having Date like max(Date) and Value between ? and ?)";
+    	Query q = em.createNativeQuery(queryStr, Person.class)
+    			.setParameter(1, t)
+    			.setParameter(2, min)
+    			.setParameter(3, max);
+    	
+    	@SuppressWarnings("unchecked")
+		List<Person> pp = q.getResultList();
+    	
+    	for(int c=0; c<pp.size(); c++){
+    		pp.get(c).cleanMeasures();
+    	}
+    	
+    	MyDao.instance.closeConnections(em);
+    	return pp;
+    }
+    public static List<Person> getByMinMeasure(int min,String t){
+    	EntityManager em = MyDao.instance.createEntityManager();
+    	
+    	String queryStr = "select * from Person where Id in ("
+    			+ "select PersonId from ("
+    			+ "select PersonId,Date,Value from Measure where Type like ?"
+    			+ ") group by PersonId having Date like max(Date) and Value >= ?)";
+    	Query q = em.createNativeQuery(queryStr, Person.class)
+    			.setParameter(1, t)
+    			.setParameter(2, min);
+    	
+    	@SuppressWarnings("unchecked")
+		List<Person> pp = q.getResultList();
+    	
+    	for(int c=0; c<pp.size(); c++){
+    		pp.get(c).cleanMeasures();
+    	}
+    	
+    	MyDao.instance.closeConnections(em);
+    	return pp;
+    }
+    public static List<Person> getByMaxMeasure(int max,String t){
+    	EntityManager em = MyDao.instance.createEntityManager();
+    	
+    	String queryStr = "select * from Person where Id in ("
+    			+ "select PersonId from ("
+    			+ "select PersonId,Date,Value from Measure where Type like ?"
+    			+ ") group by PersonId having Date like max(Date) and Value <= ?)";
+    	Query q = em.createNativeQuery(queryStr, Person.class)
+    			.setParameter(1, t)
+    			.setParameter(2, max);
+    	
+    	@SuppressWarnings("unchecked")
+		List<Person> pp = q.getResultList();
+    	
+    	for(int c=0; c<pp.size(); c++){
+    		pp.get(c).cleanMeasures();
+    	}
+    	
+    	MyDao.instance.closeConnections(em);
+    	return pp;
+    }    
 }
