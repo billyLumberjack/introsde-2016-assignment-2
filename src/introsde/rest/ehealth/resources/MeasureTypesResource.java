@@ -1,21 +1,12 @@
 package introsde.rest.ehealth.resources;
-import introsde.rest.ehealth.model.MeasureTypes;
-
-import java.util.List;
-
-import javax.ejb.*;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.PersistenceUnit;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
+
+import introsde.rest.ehealth.model.MeasureTypes;
 
 @Stateless // will work only inside a Java EE application
 @LocalBean // will work only inside a Java EE application

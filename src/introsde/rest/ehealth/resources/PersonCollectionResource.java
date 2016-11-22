@@ -1,10 +1,9 @@
 package introsde.rest.ehealth.resources;
-import introsde.rest.ehealth.model.Measure;
-import introsde.rest.ehealth.model.Person;
-
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.*;
+
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -19,6 +18,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import introsde.rest.ehealth.model.Measure;
+import introsde.rest.ehealth.model.Measures;
+import introsde.rest.ehealth.model.People;
+import introsde.rest.ehealth.model.Person;
+
 @Stateless // will work only inside a Java EE application
 @LocalBean // will work only inside a Java EE application
 @Path("/person")
@@ -32,7 +36,7 @@ public class PersonCollectionResource {
     // in case measureType, min and max are specified retrieve people whose measures match the query
     @GET
     @Produces({MediaType.TEXT_XML,  MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML })
-    public List<Person> getPeople(@Context UriInfo info) {
+    public Response getPeople(@Context UriInfo info) {
     	//retrieving the parameter
     	String typeStr = info.getQueryParameters().getFirst("measureType");
     	String minStr = info.getQueryParameters().getFirst("min");
@@ -45,34 +49,42 @@ public class PersonCollectionResource {
     			if(maxStr != null){
     				// both min and max set 
     				System.out.println("getting from range");
-        			return Person.getByRangeMeasure(
-        					Integer.parseInt(minStr),
-        					Integer.parseInt(maxStr),
+    				People people = new People();
+    				people.setPerson(Person.getByRangeMeasure(
+        					Double.parseDouble(minStr),
+        					Double.parseDouble(maxStr),
         					typeStr
-        					);
+        					));
+    				
+        			return Response.status(Response.Status.OK).entity(people).build(); 
     			}
     			else{
     				//only min set
     				System.out.println("getting from min");
-        			return Person.getByMinMeasure(Integer.parseInt(minStr),typeStr);    				
+    				People people = new People();
+    				people.setPerson(Person.getByMinMeasure(Double.parseDouble(minStr),typeStr));
+        			return Response.status(Response.Status.OK).entity(people).build(); 
     			}
     		}else if(maxStr != null){
     			//min NOT set
     			//max set
     			System.out.println("getting from max");
-    			return Person.getByMaxMeasure(Integer.parseInt(maxStr),typeStr);    			
+    			People people = new People();
+				people.setPerson(Person.getByMaxMeasure(Double.parseDouble(maxStr),typeStr));
+    			return Response.status(Response.Status.OK).entity(people).build(); 
     		}
     		// ok, there's something strange
     	}
-        List<Person> people = Person.getAll();
-        return people;
+    	People people = new People();
+		people.setPerson(Person.getAll());
+        return Response.status(Response.Status.OK).entity(people).build(); 
     }
     
     // get all the measures which belong to the person with a certain id and whose type is {measureType}
     // if other parameters are specified (after and before) retrieve just the measures falling in sych time interval 
     @GET
     @Path("{personId}/{measureType}")
-    public List<Measure> getMeasures(
+    public Response getMeasures(
     		@Context UriInfo info,
     		@PathParam("personId") int personId,
     		@PathParam("measureType") String type,
@@ -81,7 +93,10 @@ public class PersonCollectionResource {
     	//check weather after and before are both set
     	if(info.getQueryParameters().getFirst("after") != null && info.getQueryParameters().getFirst("before") != null){
     		//both parameters set
-    		return Measure.getByDate(personId, type, init, end);
+			Measures measures = new Measures();
+			measures.setMeasure(Measure.getByDate(personId, type, init, end));
+			
+			return Response.status(Response.Status.OK).entity(measures).build(); 
     	}
     	else{
     		//retrieve just the measures list from that person
@@ -90,7 +105,9 @@ public class PersonCollectionResource {
     			if(m.getType().equals(type))
     				result.add(m);
     			}
-    		return result;    		
+    		Measures measures = new Measures();
+    		measures.setMeasure(result);
+    		return Response.status(Response.Status.OK).entity(measures).build();   		
     	}
     }   
     

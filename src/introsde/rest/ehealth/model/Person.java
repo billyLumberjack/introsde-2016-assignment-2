@@ -4,7 +4,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Query;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -12,7 +23,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import introsde.rest.ehealth.dao.MyDao;
 
@@ -192,7 +203,7 @@ public class Person implements Serializable {
         MyDao.instance.closeConnections(em);
     }
     //select b.fname, b.lname from Users b JOIN b.groups c where c.groupName = :groupName 
-    public static List<Person> getByRangeMeasure(int min,int max,String t){
+    public static List<Person> getByRangeMeasure(Double min,Double max,String t){
     	EntityManager em = MyDao.instance.createEntityManager();
     	
     	String queryStr = "select * from Person where Id in ("
@@ -214,7 +225,7 @@ public class Person implements Serializable {
     	MyDao.instance.closeConnections(em);
     	return pp;
     }
-    public static List<Person> getByMinMeasure(int min,String t){
+    public static List<Person> getByMinMeasure(Double min,String t){
     	EntityManager em = MyDao.instance.createEntityManager();
     	
     	String queryStr = "select * from Person where Id in ("
@@ -235,7 +246,7 @@ public class Person implements Serializable {
     	MyDao.instance.closeConnections(em);
     	return pp;
     }
-    public static List<Person> getByMaxMeasure(int max,String t){
+    public static List<Person> getByMaxMeasure(Double max,String t){
     	EntityManager em = MyDao.instance.createEntityManager();
     	
     	String queryStr = "select * from Person where Id in ("
