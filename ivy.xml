@@ -25,6 +25,7 @@
 	
 	<dependencies>
 	
+	
         <dependency org="javax.xml.bind" name="jaxb-api" rev="2.2.11"/>
         <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.2.7"/>
         <dependency org="com.sun.xml.bind" name="jaxb-xjc" rev="2.2.7"/>

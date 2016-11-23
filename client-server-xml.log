@@ -1,5 +1,5 @@
 Request #1: GET /person Accept: application/xml Content-type: application/xml
-	=> Result: null
+	=> Result: OK
 	=> HTTP Status: 200
 <people>
     <person>
@@ -16,10 +16,17 @@ Request #1: GET /person Accept: application/xml Content-type: application/xml
                 <personId>1</personId>
             </measure>
             <measure>
-                <id>270</id>
-                <date>841379067</date>
+                <id>611</id>
+                <date>1315785600</date>
                 <type>height</type>
-                <value>167.05678706685</value>
+                <value>72.0</value>
+                <personId>1</personId>
+            </measure>
+            <measure>
+                <id>871</id>
+                <date>1315785600</date>
+                <type>height</type>
+                <value>31.4</value>
                 <personId>1</personId>
             </measure>
         </measure>
@@ -3696,10 +3703,10 @@ Request #2: GET /person/1 Accept: application/xml Content-type: application/xml
             <personId>1</personId>
         </measure>
         <measure>
-            <id>270</id>
-            <date>841379067</date>
+            <id>611</id>
+            <date>1315785600</date>
             <type>height</type>
-            <value>167.05678706685</value>
+            <value>72.0</value>
             <personId>1</personId>
         </measure>
     </measure>
@@ -3723,10 +3730,10 @@ Request #3: PUT /person/1 Accept: application/xml Content-type: application/xml
             <personId>1</personId>
         </measure>
         <measure>
-            <id>270</id>
-            <date>841379067</date>
+            <id>611</id>
+            <date>1315785600</date>
             <type>height</type>
-            <value>167.05678706685</value>
+            <value>72.0</value>
             <personId>1</personId>
         </measure>
     </measure>
@@ -3738,30 +3745,409 @@ Request #4: POST /person Accept: application/xml Content-type: application/xml
 	=> HTTP Status: 200
 <person>
     <birthdate>-788918400</birthdate>
-    <id>255</id>
+    <id>608</id>
     <name>Chuck</name>
     <surname>Norris</surname>
     <measure>
         <measure>
-            <id>559</id>
+            <id>872</id>
             <date>0</date>
             <type>weight</type>
             <value>78.9</value>
-            <personId>255</personId>
+            <personId>608</personId>
         </measure>
         <measure>
-            <id>560</id>
+            <id>873</id>
             <date>0</date>
             <type>height</type>
             <value>172.0</value>
-            <personId>255</personId>
+            <personId>608</personId>
         </measure>
     </measure>
 </person>
 
 
-Request #2: GET /person/255 Accept: application/xml Content-type: application/xml
+Request #5: DELETE /person/608 Accept: application/xml Content-type: application/xml
+	=> Result: ERROR
+	=> HTTP Status: 204
+
+
+Request #2: GET /person/608 Accept: application/xml Content-type: application/xml
 	=> Result: OK
 	=> HTTP Status: 404
+
+
+Request #9: GET /measureTypes Accept: application/xml Content-type: application/xml
+	=> Result: ERROR
+	=> HTTP Status: 200
+<measureTypes>
+    <measureType>height</measureType>
+    <measureType>weight</measureType>
+</measureTypes>
+
+
+Request #6: GET /person/1/height Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measures>
+    <measure>
+        <id>611</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>72.0</value>
+        <personId>1</personId>
+    </measure>
+</measures>
+
+
+Request #6: GET /person/203/height Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measures>
+    <measure>
+        <id>506</id>
+        <date>0</date>
+        <type>height</type>
+        <value>172.0</value>
+        <personId>203</personId>
+    </measure>
+</measures>
+
+
+Request #6: GET /person/1/weight Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measures>
+    <measure>
+        <id>104</id>
+        <date>-1743184461</date>
+        <type>weight</type>
+        <value>65.070493315338</value>
+        <personId>1</personId>
+    </measure>
+</measures>
+
+
+Request #6: GET /person/203/weight Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measures>
+    <measure>
+        <id>505</id>
+        <date>0</date>
+        <type>weight</type>
+        <value>78.9</value>
+        <personId>203</personId>
+    </measure>
+</measures>
+
+
+Request #6: GET /person/203/weight Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 404
+
+
+Request #7: GET /person/1/height/611 Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measure>
+    <id>611</id>
+    <date>1315785600</date>
+    <type>height</type>
+    <value>72.0</value>
+    <personId>1</personId>
+</measure>
+
+
+Request #6: GET /person/1/height Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measures>
+    <measure>
+        <id>611</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>72.0</value>
+        <personId>1</personId>
+    </measure>
+</measures>
+
+
+Request #8: POST /person/1/height Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measure>
+    <id>874</id>
+    <date>1315785600</date>
+    <type>height</type>
+    <value>72.0</value>
+    <personId>1</personId>
+</measure>
+
+
+Request #6: GET /person/1/height Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measures>
+    <measure>
+        <id>611</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>72.0</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>874</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>72.0</value>
+        <personId>1</personId>
+    </measure>
+</measures>
+
+
+Request #6: GET /person/1/height Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+
+
+Request #10: PUT /person/1/height/874 Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measure>
+    <id>874</id>
+    <date>1315785600</date>
+    <type>height</type>
+    <value>31.4</value>
+    <personId>1</personId>
+</measure>
+
+
+Request #7: GET /person/1/height/874 Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measure>
+    <id>874</id>
+    <date>1315785600</date>
+    <type>height</type>
+    <value>31.4</value>
+    <personId>1</personId>
+</measure>
+
+
+Request #7: GET /person/1/height/874 Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+
+
+Request #11: GET /person/1/height Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<measures>
+    <measure>
+        <id>611</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>72.0</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>653</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>72.0</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>656</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>659</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>662</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>665</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>668</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>671</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>674</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>677</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>680</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>683</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>686</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>703</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>706</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>753</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>803</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>853</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>856</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>859</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>862</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>865</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>868</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>871</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+    <measure>
+        <id>874</id>
+        <date>1315785600</date>
+        <type>height</type>
+        <value>31.4</value>
+        <personId>1</personId>
+    </measure>
+</measures>
+
+
+Request #12: GET /person Accept: application/xml Content-type: application/xml
+	=> Result: OK
+	=> HTTP Status: 200
+<people>
+    <person>
+        <birthdate>-1923182587</birthdate>
+        <id>1</id>
+        <name>Samuele</name>
+        <surname>Vargas</surname>
+        <measure>
+            <measure>
+                <id>104</id>
+                <date>-1743184461</date>
+                <type>weight</type>
+                <value>65.070493315338</value>
+                <personId>1</personId>
+            </measure>
+            <measure>
+                <id>611</id>
+                <date>1315785600</date>
+                <type>height</type>
+                <value>72.0</value>
+                <personId>1</personId>
+            </measure>
+        </measure>
+    </person>
+</people>
 
 
