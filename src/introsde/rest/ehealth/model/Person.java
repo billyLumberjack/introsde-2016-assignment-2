@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import introsde.rest.ehealth.dao.MyDao;
 
@@ -64,7 +64,6 @@ public class Person implements Serializable {
 	// mappedBy must be equal to the name of the attribute in LifeStatus that maps this relation
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="person")
 	@XmlElementWrapper(name="measure")
-	@JsonIgnore
 	private List<Measure> measure;
 	
 	@XmlTransient
