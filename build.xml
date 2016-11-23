@@ -54,7 +54,7 @@
 	<!-- AFTER COMPILE CAN RUN EVALUATION -->
 	<target name="execute.evaluation" depends="compile">
 		<!-- profile writer initialize db with 20 random people -->
-		<java classname="Client.class" classpath="build/introsde/rest/ehealth/client">
+		<java classname="${build.dir}/introsde/rest/ehealth/client/Client.class" classpath="${build.dir}">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="**/*.jar" />
