@@ -51,7 +51,7 @@ import introsde.rest.ehealth.model.Person;
 @SuppressWarnings("unchecked")
 public class Client {
 	
-	private static final String ENDPOINT = "http://localhost:8080/introsde-assignment2/rest/";
+	private static final String ENDPOINT = "https://introsde-sm-assignment2.herokuapp.com/rest/";
 
     private static final URI SERVER_URI = UriBuilder.fromUri(ENDPOINT).build();
     private static final WebTarget SERVER = ClientBuilder.newClient(new ClientConfig()).target(SERVER_URI);	
