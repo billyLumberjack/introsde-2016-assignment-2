@@ -2,8 +2,7 @@
 <project name="introsde-2016-assignment-1" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 	
 	<property name="build.dir" value="build" />
-	<property name="src.dir" value="src" />
-	<property name="xjc.package" value="generated" />
+	<property name="src.dir" value="src/introsde/rest/ehealth/client" />
 	<property name="lib.dir" value="lib" />
 	
 	<property name="ivy.install.version" value="2.4.0-rc1" />
@@ -38,13 +37,6 @@
 	</target>		
 	<!-- END OF RESOLVE IVY DEPENDENCIES -->
 
-	<!-- XJC CLASSES GENERATION FROM people.xsd -->		
-	<target name="generate">
-		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="lib.path.id"></taskdef>
-		<xjc schema="people.xsd" destdir="${src.dir}" package="generated" />
-	</target>
-	<!-- END OF XJC CLASSES GENERATION FROM people.xsd -->
-
 	<!-- AFTER DOWNLOADED IVY AND HANDLED THE DEPENDENCIES ANT CAN COMPILE -->	
 	<target name="compile" depends="resolve">
 		<echo message="Compile target has been called" />
@@ -61,8 +53,7 @@
 	<!-- AFTER COMPILE CAN RUN EVALUATION -->
 	<target name="execute.evaluation" depends="compile">
 		<!-- profile writer initialize db with 20 random people -->
-		<echo message="[PROFILE WRITER]" />
-		<java classname="HealthProfileWriter" classpath="${build.dir}">
+		<java classname="Client" classpath="${build.dir}">
 			<classpath>
 				<fileset dir="${lib.dir}">
 					<include name="**/*.jar" />
@@ -70,40 +61,6 @@
 				</fileset>
 			</classpath>			
 		</java>
-		
-		<!--
-			ProfileReader does,
-				- print people in people.xml with details
-				- print healthprofile from person's id = 5
-				- print people whose weight is > 90kg
-		-->
-		<echo message="[PROFILE READER]" />
-		<java classname="HealthProfileReader" classpath="${build.dir}">
-			<classpath>
-				<fileset dir="${lib.dir}">
-					<include name="**/*.jar" />
-					<include name="*.jar" />
-				</fileset>
-			</classpath>			
-		</java>
-
-		<!--
-			DataMapper does,
-				- generate 3 random people and marshall them to people_new.xml
-				- clean its local variable and unmarshall the previous created people from people_new.xml
-				- generate other 3 random people and marshall them to people_new.json
-				- clean its local variable and unmarshall the previous created people from people_new.json
-		-->		
-		<echo message="[DATA MAPPER]" />
-		<java classname="DataMapper" classpath="${build.dir}">
-			<classpath>
-				<fileset dir="${lib.dir}">
-					<include name="**/*.jar" />
-					<include name="*.jar" />
-				</fileset>
-			</classpath>			
-		</java>
-	
 	</target>
 	<!-- END OF AFTER COMPILE CAN RUN EVALUATION -->	
 	
