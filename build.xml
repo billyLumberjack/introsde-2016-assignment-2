@@ -3,6 +3,7 @@
 	
 	<property name="build.dir" value="build" />
 	<property name="src.dir" value="src/introsde/rest/ehealth/client" />
+	<property name="model.dir" value="src/introsde/rest/ehealth/model" />
 	<property name="lib.dir" value="lib" />
 	
 	<property name="ivy.install.version" value="2.4.0-rc1" />
@@ -42,10 +43,14 @@
 		<echo message="Compile target has been called" />
 		<mkdir dir="${build.dir}"/>
 		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="lib.path.id" includeAntRuntime="false"></javac>
+		<javac srcdir="${model.dir}" destdir="${build.dir}" classpathref="lib.path.id" includeAntRuntime="false"></javac>
 		<copy todir="${build.dir}" overwrite="true">
 			<fileset dir="${src.dir}">
 				<include name="*.xml" />
 			</fileset>
+			<fileset dir="${model.dir}">
+				<include name="*.xml" />
+			</fileset>			
 		</copy>
 	</target>
 	<!-- END OF AFTER DOWNLOADED IVY AND HANDLED THE DEPENDENCIES ANT CAN COMPILE -->
