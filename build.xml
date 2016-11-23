@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="introsde-2016-assignment-1" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<property name="build.dir" value="build" />
+	<property name="src.dir" value="src" />
+	<property name="xjc.package" value="generated" />
+	<property name="lib.dir" value="lib" />
+	
+	<property name="ivy.install.version" value="2.4.0-rc1" />
+	<property name="ivy.jar.dir" value="${basedir}/ivy" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	
+	<path id="lib.path.id">
+		<fileset dir="${lib.dir}" />
+	</path>	
+	
+	<!-- IVY DOWNLOAD AND INSTALLATION -->
+	<!-- create ivy folder and daownload ivy.jar inside -->
+	<target name="download-ivy" unless="skip.download">
+		<echo message="installing ivy..."/>
+		<mkdir dir="${ivy.jar.dir}"/>
+		<get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+	</target>
+	
+	<!-- install ivy -->
+	<target name="install-ivy" depends="download-ivy" description="--> install ivy">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+	</target>
+	<!-- END OF IVY DOWNLOAD AND INSTALLATION -->
+	
+	<!-- RESOLVE IVY DEPENDENCIES -->
+	<target name="resolve" depends="install-ivy" description="--> retrieve dependencies with ivy">
+		<mkdir dir="${ivy.jar.dir}"/>
+		<ivy:retrieve pattern="${lib.dir}/[artifact]-[type]-[revision].[ext]"/>
+	</target>		
+	<!-- END OF RESOLVE IVY DEPENDENCIES -->
+
+	<!-- XJC CLASSES GENERATION FROM people.xsd -->		
+	<target name="generate">
+		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask" classpathref="lib.path.id"></taskdef>
+		<xjc schema="people.xsd" destdir="${src.dir}" package="generated" />
+	</target>
+	<!-- END OF XJC CLASSES GENERATION FROM people.xsd -->
+
+	<!-- AFTER DOWNLOADED IVY AND HANDLED THE DEPENDENCIES ANT CAN COMPILE -->	
+	<target name="compile" depends="resolve">
+		<echo message="Compile target has been called" />
+		<mkdir dir="${build.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="lib.path.id" includeAntRuntime="false"></javac>
+		<copy todir="${build.dir}" overwrite="true">
+			<fileset dir="${src.dir}">
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+	</target>
+	<!-- END OF AFTER DOWNLOADED IVY AND HANDLED THE DEPENDENCIES ANT CAN COMPILE -->
+	
+	<!-- AFTER COMPILE CAN RUN EVALUATION -->
+	<target name="execute.evaluation" depends="compile">
+		<!-- profile writer initialize db with 20 random people -->
+		<echo message="[PROFILE WRITER]" />
+		<java classname="HealthProfileWriter" classpath="${build.dir}">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+					<include name="*.jar" />
+				</fileset>
+			</classpath>			
+		</java>
+		
+		<!--
+			ProfileReader does,
+				- print people in people.xml with details
+				- print healthprofile from person's id = 5
+				- print people whose weight is > 90kg
+		-->
+		<echo message="[PROFILE READER]" />
+		<java classname="HealthProfileReader" classpath="${build.dir}">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+					<include name="*.jar" />
+				</fileset>
+			</classpath>			
+		</java>
+
+		<!--
+			DataMapper does,
+				- generate 3 random people and marshall them to people_new.xml
+				- clean its local variable and unmarshall the previous created people from people_new.xml
+				- generate other 3 random people and marshall them to people_new.json
+				- clean its local variable and unmarshall the previous created people from people_new.json
+		-->		
+		<echo message="[DATA MAPPER]" />
+		<java classname="DataMapper" classpath="${build.dir}">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+					<include name="*.jar" />
+				</fileset>
+			</classpath>			
+		</java>
+	
+	</target>
+	<!-- END OF AFTER COMPILE CAN RUN EVALUATION -->	
+	
+	
+	<target name="clean">
+		<echo message="Clean has been called" />
+		<delete dir="${build.dir}" />
+		<echo message="${build.dir} has been deleted" />
+		<delete dir="${lib.dir}" />
+		<echo message="${lib.dir} has been deleted" />
+		<delete file="people.xml" />
+		<delete file="people_new.xml" />
+		<delete file="people_new.json" />
+		<echo message="xml and json has been deleted" />
+	</target>	
+
+
+</project>
