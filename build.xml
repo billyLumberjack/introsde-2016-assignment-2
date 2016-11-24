@@ -52,7 +52,7 @@
 	<!-- END OF AFTER DOWNLOADED IVY AND HANDLED THE DEPENDENCIES ANT CAN COMPILE -->
 	
 	<!-- AFTER COMPILE CAN RUN EVALUATION -->
-	<target name="execute.evaluation" depends="compile">
+	<target name="execute.client" depends="compile">
 		<!-- profile writer initialize db with 20 random people -->
 		<java classname="introsde.rest.ehealth.client.Client" classpath="${build.dir}">
 			<classpath>
@@ -72,10 +72,9 @@
 		<echo message="${build.dir} has been deleted" />
 		<delete dir="${lib.dir}" />
 		<echo message="${lib.dir} has been deleted" />
-		<delete file="people.xml" />
-		<delete file="people_new.xml" />
-		<delete file="people_new.json" />
-		<echo message="xml and json has been deleted" />
+		<delete file="client-server-json.log" />
+		<delete file="client-server-xml.log" />
+		<echo message="log files has been deleted" />
 	</target>	
 
 

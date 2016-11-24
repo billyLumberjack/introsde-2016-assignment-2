@@ -1,17 +1,17 @@
 # introsde-2016-assignment-2
 ## Samuele Malavasi | mat.182551
-The second assignment for the course of introduction of service design (a.a. 2016-2017) aim to implement a service on a heroku server and a client able to consume the api both via json and xml.
+The second assignment for the course of introduction of service design (a.a. 2016-2017) aims to implement a service on a heroku server and a client able to consume the api both via json and xml.
 I used Ivy to manage dependencies and ant to automate the ivy installation, dependencies retrieving, java compiling and execution (of the client). The server is already deployed on heroku.
 
 ### About the code
 The main classes are
 
-**MyFilter** Is called (in the web.xml) on each request, it verifies if the database is populated. In case it is not, provides to the population taking the queries from two .txt files.
+**MyFilter** Is called (in the web.xml) on each request, it verifies if the database is populated. In case it is not, provides the population taking the queries from two .txt files.
 
 **Client** Executes all the requests in the asked order, both via json and xml. It prints the log in two different files and on the console.
   * `rest api methods` Used to interface to the server side: here we can perform CRUD operations
   * `createLogStr(String, int)` Returns the string to print on each request's execution
-  * `toPrettyString(String)` Prettify the xml type string given
+  * `toPrettyString(String)` Prettify the given xml type string
   * `unmarshallJSON(String, Class)` Given a `json` type string and its associated class returns a the generic java object obtained parsing the string
   * `unmarshallXML(String, Class)` Given a `xml` type string and its associated class returns a the generic java object obtained parsing the string 
 
@@ -66,44 +66,29 @@ The main classes are
   * `getMeasures(UriInfo, int, String, int, int)` Get all the measures which belong to the person with a certain id and whose type matched, if other parameters are specified (after and before) retrieve just the measures falling in the time interval
   * `getMeasureById(int, String, int)` Returns just a measure with certain PersonId, Type and Id
   * `getPerson(int)` Expose the person resource whose id matches the given one
-  * `newMeasure(Measure, int, String)` Insert in the db a new measure for the person whose id is matched
-    // the new measure has type equal to {measureType}
-  * `newPerson(Person)`
-  * `putPerson(int, Person)`
-  * `putMeasure(int, String, int, Measure)`
-  * `deletePerson(int)  `
-  
-  * **generatePeople()** Generates 3 random people inside a new istance of a **People** object and returns it
-  * **marshall(People, String)** Marshall in XML format the People istance passed inside the indicated file
-  * **marshallJSON(People, String)** Marshall in JSON format the People istance passed inside the indicated file
-  * **unmarshall(String)** Unmarshall from the XML file indicated a People istance and returns it
-  * **unmarshallJSON(String)** Unmarshall from the JSON file indicated a People istance and returns it
-  * **main(String[])** Marshalls and Unmarshalls both from XML and from JSON, before each marshalling it generates 3 new **Person** istances inside a **People** object, at each step it cleans the variable in which data are stored:
-    * Generates 3 random people and marshall them to people_new.xml
-    * Cleans local variable
-    * Unmarshalls the previous created people from people_new.xml
-    * Generates other 3 random people and marshall them to people_new.json
-    * Cleans local variable
-    * Unmarshalls the previous created people from people_new.json
-* `people.xsd`:The XML schema usefull to validate people.xml and to generate through **XJC** the classes to model data
+  * `newMeasure(Measure, int, String)` Insert in the db a new measure for the person whose id is matched, the new measure has type equal to the given one
+  * `newPerson(Person)` Insert in the database the person coming form the client's request body
+  * `putPerson(int, Person)` Edit the person resource whose id matches the given one, take the data from the user input
+  * `putMeasure(int, String, int, Measure)` Update the measure matching personId,Type and Id
+  * `deletePerson(int)` Remove from the db the person whose id matches the given one
 
 ### About the tasks
-Everything written in `build.xml` is necessary to run **execute.evaluation** target, with the exception of the target 'generate' whose scope is to generate models automatically. I edited such model to fit some implementation needs.
-Before running **execute.evaluation** ant will,
+Everything written in `build.xml` is useful to run **execute.client** target.
+Before running **execute.client** ant will,
 * download & install ivy to manage dependencies
 * make ivy handle dependencies
-* compile the 3 main classes including the dependencies
-* finally run `HealthProfileWriter`, `HealthProfileReader`, `DataMapper`
+* compile the classes including dependencies
+* finally run `Client`
 
 It is also implemented a task to clean the folder and delete the generated files with the target **clean**
 
 ### How to run
 Is it possible to make the code working by just running:
-> git clone https://github.com/billyLumberjack/introsde-2016-assignment-1
+> git clone https://github.com/billyLumberjack/introsde-2016-assignment-2
 
-> cd introsde-2016-assignment-1
+> cd introsde-2016-assignment-2
 
-> ant execute.evaluation
+> ant execute.client
 
 Eventually it is possile to clean the folder and restore it as after the clone with
 > ant clean
